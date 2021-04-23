@@ -1,0 +1,12 @@
+numpy
+xarray
+matplotlib
+cartopy
+#cmocean
+
+#if you want to horizontally interpolate
+#xesmf=0.3.0
+
+#to process large dataset
+dask
+numba
