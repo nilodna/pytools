@@ -212,3 +212,46 @@ def configuring_for_pdf(cf):
         c.set_linewidth(0.00000000001)
 
 ###############################################################################
+
+
+def compasstransform(theta):
+    '''
+    Converts angles between compass direction (clockwise from true North) to direction in polar coordinates (counter-clockwise from x-axis, pointing East).
+    Note that regardless of which way the conversion is being done (compass -> polar, or polar -> compass), the output of this function will be the same for a given input.
+    INPUT:
+    - theta: direction (degrees), numpy array
+    OUTPUT:
+    - converted direction (degrees), numpy array of same size
+        (0 to 360 degrees)
+        
+    SOURCE: https://github.com/physoce/physoce-py/blob/master/physoce/util.py
+    '''
+    theta = np.array(theta)
+    theta = theta*np.pi/180. # convert to radians
+    x = -np.sin(-theta)
+    y = np.cos(-theta)
+    theta_out = np.arctan2(y,x)
+    theta_out = theta_out*180/np.pi # convert back to degrees
+    neg = theta_out < 0
+    theta_out[neg] = theta_out[neg]+360
+    return theta_out
+
+###############################################################################
+
+def matlab2datetime64(datenum,unit='s'):
+    '''
+    Convert Matlab serial date number to NumPy datetime64 format.
+    INPUTS:
+    datenum - Matlab serial date number, can be array
+    unit - time unit of datetime64 output (default 's')
+    OUTPUT:
+    array of datetime64 objects
+    
+    SOURCE: https://github.com/physoce/physoce-py/blob/master/physoce/util.py
+    '''
+    origin = np.datetime64('0000-01-01 00:00:00', unit) - np.timedelta64(1, 'D')
+    daylength = int(np.timedelta64(1,'D')/np.timedelta64(1, unit))
+    dt64 = datenum * np.timedelta64(daylength, unit) + origin
+    return dt64
+
+###############################################################################
