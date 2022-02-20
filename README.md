@@ -1,2 +1,2 @@
 # pytools
-python routines for a day to day work
+python routines for daily work

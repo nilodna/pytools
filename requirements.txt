@@ -26,8 +26,6 @@ colorspacious=1.1.2=pyh24bf2e0_0
 curl=7.71.1=he644dc0_1
 cycler=0.10.0=py_2
 cytoolz=0.10.1=py37h516909a_0
-dask=2.21.0=py_0
-dask-core=2.21.0=py_0
 dbus=1.13.6=he372182_0
 decorator=4.4.2=py_0
 defusedxml=0.6.0=py_0
