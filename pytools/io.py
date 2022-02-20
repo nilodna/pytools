@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import xarray as xr
 
 from pytools.utils import get_datetime
 
@@ -67,3 +68,24 @@ def read_raw_piof(fname):
     df._metadata = meta
     
     return df
+
+###############################################################################
+
+
+def get_hindcast_glorys(lons, lats):
+    
+    # glorys spatial domain
+    lon_glorys = np.arange(-180, 179.91667, 0.08332825)
+    lat_glorys = np.arange(-80, 90, 0.08332825)
+    
+    # creating the index spatial range 
+    lons_indexes = [ np.argmin(np.abs(lon_glorys - lon)) for lon in lons ]
+    lats_indexes = [ np.argmin(np.abs(lat_glorys - lat)) for lat in lats ]
+    
+    baseurl = f"""
+    https://my.cmems-du.eu/thredds/dodsC/cmems_mod_glo_phy_my_0.083_P1D-m?longitude[{lons_indexes[0]}:{lons_indexes[1]}:4320],latitude[{lats_indexes[0]}:{lats_indexes[1]}:2040],time[0:1:10012],zos[0:1:10012][{lats_indexes[0]}:{lats_indexes[1]}:2040][{lons_indexes[0]}:{lons_indexes[1]}:4320]
+               """
+               
+    ds = xr.open_dataset(baseurl)
+    
+    return ds
