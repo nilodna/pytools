@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
+import cmocean as cmo
 import gsw
 
-def TSdiagram(df, salt='sal00', temp='t090C', figsize=(10,10)):
+def TSdiagram(df, salt='sal00', temp='t090C', depth=None, figsize=(10,10)):
     """Plot a TS diagram with parametric isopycnals based on the limits given in the df
 
     Parameters
@@ -43,12 +43,20 @@ def TSdiagram(df, salt='sal00', temp='t090C', figsize=(10,10)):
     cl_bground = ax.clabel(cr_bground, fontsize=10, inline=True, fmt="%0.1f")
     
     # adding TS pairs
-    ts_cr = ax.scatter(df[salt], df[temp], s=10, alpha=1, color='k')
+    if depth:
+        ts_cr = ax.scatter(df[salt], df[temp], s=10, alpha=1, c=df[depth], cmap=cmo.cm.deep, 
+                           edgecolors=('k'), linewidths=(.05))
+        cbar = plt.colorbar(ts_cr)
+    else:
+        ts_cr = ax.scatter(df[salt], df[temp], s=10, alpha=1, color='k')
     
     ax.set_xlabel('Salinity [psu]', fontsize=14)
     ax.set_ylabel(r'Temperature [$^o$C]', fontsize=14)
     
-    return fig,ax
+    if depth:
+        return fig,ax,cbar
+    else:
+        return fig,ax
 
 ############################################################################################################################
 

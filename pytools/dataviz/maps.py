@@ -14,6 +14,9 @@ def make_map(extent=[-50,-41,-30,-22],
              ax=None, 
              add_gridlines=False,
              add_features=False,
+             coastline_color='white',
+             landcolor=cfeature.COLORS['land'],
+             shapefile_path='/home/danilo/Research/data/shapefiles/OSM',
              ):
     """Make map using the box send in extent variable, with a minimap on the right
     lower corner.
@@ -53,7 +56,7 @@ def make_map(extent=[-50,-41,-30,-22],
 
     # add high resolution coastline from openstreetmap
     if add_features:
-        ax = add_openstreetmap_shapefile(ax)
+        ax = add_openstreetmap_shapefile(ax, path=shapefile_path, landcolor=landcolor, coastline_color=coastline_color)
 
     return ax
 
@@ -66,7 +69,7 @@ def add_openstreetmap_shapefile(ax,
     """Function to add a coastline and land (colored by the given colors) from the Open Street Map dataset. 
     Both information are of high resolution, describing several features nearshore, like small islands, beachs, and so on.
 
-        Parameters
+    Parameters
     ----------
     ax : cartopy.mpl.geoaxes.GeoAxesSubplot
         Axes with ccrs.PlateCarree() projection already set for a given domain.
@@ -83,8 +86,9 @@ def add_openstreetmap_shapefile(ax,
     ax.add_geometries(line.geometries(), ccrs.PlateCarree(), facecolor=coastline_color, edgecolor='black')
 
     # adding land from openstreemap
-    land = shapereader.Reader(f'{path}/OSM_BRA_land/land.shp')
-    ax.add_geometries(land.geometries(), ccrs.PlateCarree(), facecolor=landcolor, edgecolor='black')
+    if landcolor:
+        land = shapereader.Reader(f'{path}/OSM_BRA_land/land.shp')
+        ax.add_geometries(land.geometries(), ccrs.PlateCarree(), facecolor=landcolor, edgecolor='black')
 
     return ax
 
@@ -98,6 +102,23 @@ def insert_miniglobe(ax,
                      box_color='red',
                      box_alpha=1,
                      box_edge_width=1):
+    
+    """
+    Plot a miniglobe in your cartopy object.
+    
+    :params location: list
+        position to insert the globe
+    :params extent: list
+        geographical area to highlight the specific domain in the globe
+    :params center: list
+        single location (longitude, latitude) which will become the center of the glob
+    :params box_color: str
+        color of square over the specific domain
+    :params box_alpha: float
+        whether or not put an alpha filter
+    :params box_edge_width: float
+        linewidth of your square
+    """
     # upper left: [0.13, 0.642, 0.2, 0.15]
     # lower right: [0.7, 0.18, 0.2, 0.2]
     # 
